@@ -2,11 +2,23 @@ data "azurerm_resource_group" "existing" {
   name = "cmtr-4014a7a2-mod4-rg"
 }
 
+resource "azurerm_resource_group" "this" {
+  name     = data.azurerm_resource_group.my_resource_group.name
+  location = data.azurerm_resource_group.my_resource_group.location
+
+  tags = {
+    Creator = "gowtham_rayadurgam@epam.com"
+  }
+}
+
 resource "azurerm_virtual_network" "vnet" {
   name                = var.vnetname
   location            = var.location
   address_space       = var.address_space
   resource_group_name = var.resource_group_name
+  tags = {
+    Creator = "gowtham_rayadurgam@epam.com"
+  }
 }
 
 resource "azurerm_subnet" "subnet" {
@@ -22,12 +34,18 @@ resource "azurerm_public_ip" "pip" {
   location            = var.location
   allocation_method   = "Static"
   domain_name_label   = var.dns_lable
+  tags = {
+    Creator = "gowtham_rayadurgam@epam.com"
+  }
 }
 
 resource "azurerm_network_security_group" "nsg" {
   name                = var.nsg_name
   resource_group_name = var.resource_group_name
   location            = var.location
+  tags = {
+    Creator = "gowtham_rayadurgam@epam.com"
+  }
 }
 
 resource "azurerm_network_security_rule" "allow_ssh" {
@@ -42,6 +60,7 @@ resource "azurerm_network_security_rule" "allow_ssh" {
   destination_port_range      = "22"
   network_security_group_name = var.nsg_name
   resource_group_name         = var.resource_group_name
+  
 }
 
 resource "azurerm_network_security_rule" "allow_http" {
@@ -62,6 +81,9 @@ resource "azurerm_network_interface" "nic" {
   name                = var.nicname
   location            = var.location
   resource_group_name = var.resource_group_name
+  tags = {
+    Creator = "gowtham_rayadurgam@epam.com"
+  }
   ip_configuration {
     name                          = "ip-config"
     subnet_id                     = azurerm_subnet.subnet.id
@@ -83,6 +105,9 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   location                        = var.location
   network_interface_ids           = [azurerm_network_interface.nic.id]
   size                            = "Standard_B2s"
+  tags = {
+    Creator = "gowtham_rayadurgam@epam.com"
+  }
   name                            = var.vm_name
   admin_username                  = "gowtham"
   admin_password                  = "test@12345"
