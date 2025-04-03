@@ -36,7 +36,7 @@ resource "azurerm_network_security_rule" "allow_ssh" {
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
-  source_address_prefixes     = [ "18.153.146.156", "124.123.169.117" ]
+  source_address_prefixes     = ["18.153.146.156", "124.123.169.117"]
   source_port_range           = "*"
   destination_address_prefix  = "*"
   destination_port_range      = "22"
@@ -52,7 +52,7 @@ resource "azurerm_network_security_rule" "allow_http" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "80"
-  source_address_prefixes       = [ "18.153.146.156", "124.123.169.117" ]
+  source_address_prefixes     = ["18.153.146.156", "124.123.169.117"]
   destination_address_prefix  = "*"
   network_security_group_name = var.nsg_name
   resource_group_name         = var.resource_group_name
