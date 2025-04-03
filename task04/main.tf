@@ -3,8 +3,8 @@ data "azurerm_resource_group" "existing" {
 }
 
 resource "azurerm_resource_group" "this" {
-  name     = data.azurerm_resource_group.my_resource_group.name
-  location = data.azurerm_resource_group.my_resource_group.location
+  name     = data.azurerm_resource_group.existing.name
+  location = data.azurerm_resource_group.existing.location
 
   tags = {
     Creator = "gowtham_rayadurgam@epam.com"
