@@ -26,6 +26,7 @@ resource "azurerm_subnet" "subnet" {
   virtual_network_name = var.vnetname
   resource_group_name  = var.resource_group_name
   address_prefixes     = var.address_prefix
+  depends_on           = [azurerm_virtual_network.vnet]
 }
 
 resource "azurerm_public_ip" "pip" {
@@ -60,6 +61,7 @@ resource "azurerm_network_security_rule" "allow_ssh" {
   destination_port_range      = var.ssh_dprange
   network_security_group_name = var.nsg_name
   resource_group_name         = var.resource_group_name
+  depends_on                  = [azurerm_network_security_group.nsg]
 
 }
 
@@ -75,6 +77,7 @@ resource "azurerm_network_security_rule" "allow_http" {
   destination_address_prefix  = var.distaddr
   network_security_group_name = var.nsg_name
   resource_group_name         = var.resource_group_name
+  depends_on                  = [azurerm_network_security_group.nsg]
 }
 
 resource "azurerm_network_interface" "nic" {
@@ -135,5 +138,4 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
       host     = azurerm_public_ip.pip.ip_address
     }
   }
-
 }
