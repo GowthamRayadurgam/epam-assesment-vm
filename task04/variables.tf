@@ -67,12 +67,12 @@ variable "allowip" {
   type        = list(string)
 }
 
-variable "allowhttp" {
+variable "AllowHTTP" {
   description = "allowing http traffic"
   type        = string
 }
 
-variable "allowssh" {
+variable "AllowSSH" {
   description = "allow ssh"
   type        = string
 }
@@ -165,7 +165,7 @@ variable "valversion" {
 variable "username" {
   type        = string
   description = "username"
-  sensitive   = true
+  #  sensitive   = true
 }
 
 variable "vm_password" {
