@@ -128,7 +128,6 @@ variable "ipconfig" {
 variable "vmsize" {
   type        = string
   description = "vm size"
-
 }
 
 variable "osdisk" {

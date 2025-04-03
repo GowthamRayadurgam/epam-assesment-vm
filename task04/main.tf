@@ -129,7 +129,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
       "sudo apt install nginx"
     ]
     connection {
-      type     = var.allowssh
+      type     = var.AllowSSH
       user     = var.username
       password = var.vm_password
       host     = azurerm_public_ip.pip.ip_address
