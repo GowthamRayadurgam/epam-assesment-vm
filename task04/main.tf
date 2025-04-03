@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "existing" {
-  name = "cmtr-4014a7a2-mod4-rg"
+  name = var.resource_group_name
 }
 
 resource "azurerm_resource_group" "this" {
@@ -7,7 +7,7 @@ resource "azurerm_resource_group" "this" {
   location = data.azurerm_resource_group.existing.location
 
   tags = {
-    Creator = "gowtham_rayadurgam@epam.com"
+    Creator = var.tag
   }
 }
 
@@ -17,7 +17,7 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = var.address_space
   resource_group_name = var.resource_group_name
   tags = {
-    Creator = "gowtham_rayadurgam@epam.com"
+    Creator = var.tag
   }
 }
 
@@ -32,10 +32,10 @@ resource "azurerm_public_ip" "pip" {
   name                = var.pip_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  allocation_method   = "Static"
+  allocation_method   = var.pip_allocation
   domain_name_label   = var.dns_lable
   tags = {
-    Creator = "gowtham_rayadurgam@epam.com"
+    Creator = var.tag
   }
 }
 
@@ -44,35 +44,35 @@ resource "azurerm_network_security_group" "nsg" {
   resource_group_name = var.resource_group_name
   location            = var.location
   tags = {
-    Creator = "gowtham_rayadurgam@epam.com"
+    Creator = var.tag
   }
 }
 
 resource "azurerm_network_security_rule" "allow_ssh" {
-  name                        = "ssh"
-  priority                    = 100
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_address_prefixes     = ["18.153.146.156", "124.123.169.117"]
-  source_port_range           = "*"
-  destination_address_prefix  = "*"
-  destination_port_range      = "22"
+  name                        = var.allowssh
+  priority                    = var.sshpriority
+  direction                   = var.direction
+  access                      = var.access
+  protocol                    = var.protocol
+  source_address_prefixes     = var.allowip
+  source_port_range           = var.sprange
+  destination_address_prefix  = var.distaddr
+  destination_port_range      = var.ssh_dprange
   network_security_group_name = var.nsg_name
   resource_group_name         = var.resource_group_name
 
 }
 
 resource "azurerm_network_security_rule" "allow_http" {
-  name                        = "allow-http"
-  priority                    = 1001
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "80"
-  source_address_prefixes     = ["18.153.146.156", "124.123.169.117"]
-  destination_address_prefix  = "*"
+  name                        = var.allowhttp
+  priority                    = var.httpriority
+  direction                   = var.direction
+  access                      = var.access
+  protocol                    = var.protocol
+  source_port_range           = var.sprange
+  destination_port_range      = var.http_dprange
+  source_address_prefixes     = var.allowip
+  destination_address_prefix  = var.distaddr
   network_security_group_name = var.nsg_name
   resource_group_name         = var.resource_group_name
 }
@@ -82,13 +82,12 @@ resource "azurerm_network_interface" "nic" {
   location            = var.location
   resource_group_name = var.resource_group_name
   tags = {
-    Creator = "gowtham_rayadurgam@epam.com"
+    Creator = var.tag
   }
   ip_configuration {
-    name                          = "ip-config"
+    name                          = var.ipconfig
     subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address            = "IPV4"
-    private_ip_address_allocation = "Static"
+    private_ip_address_allocation = var.pip_allocation
     public_ip_address_id          = azurerm_public_ip.pip.id
   }
   depends_on = [azurerm_subnet.subnet, azurerm_public_ip.pip]
@@ -104,24 +103,24 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   resource_group_name   = var.resource_group_name
   location              = var.location
   network_interface_ids = [azurerm_network_interface.nic.id]
-  size                  = "Standard_B2s"
+  size                  = var.vmsize
   tags = {
-    Creator = "gowtham_rayadurgam@epam.com"
+    Creator = var.tag
   }
   name                            = var.vm_name
-  admin_username                  = "gowtham"
-  admin_password                  = "test@12345"
+  admin_username                  = var.username
+  admin_password                  = var.passwd
   disable_password_authentication = false
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "24_04-lts"
-    version   = "latest"
+    publisher = var.publisher
+    offer     = var.offer
+    sku       = var.ossku
+    version   = var.valversion
   }
   os_disk {
-    name                 = "${var.vm_name}osdisk"
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    name                 = var.osdisk
+    caching              = var.caching
+    storage_account_type = var.storageaccount
   }
 
   provisioner "remote-exec" {
@@ -130,9 +129,9 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
       "sudo apt install nginx"
     ]
     connection {
-      type     = "ssh"
-      user     = "gowtham"
-      password = "test@12345"
+      type     = var.allowssh
+      user     = var.username
+      password = var.passwd
       host     = azurerm_public_ip.pip.ip_address
     }
   }
