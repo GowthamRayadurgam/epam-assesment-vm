@@ -49,7 +49,7 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 resource "azurerm_network_security_rule" "allow_ssh" {
-  name                        = var.allowssh
+  name                        = var.AllowSSH
   priority                    = var.sshpriority
   direction                   = var.direction
   access                      = var.access
@@ -64,7 +64,7 @@ resource "azurerm_network_security_rule" "allow_ssh" {
 }
 
 resource "azurerm_network_security_rule" "allow_http" {
-  name                        = var.allowhttp
+  name                        = var.AllowHTTP
   priority                    = var.httpriority
   direction                   = var.direction
   access                      = var.access
@@ -109,7 +109,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   }
   name                            = var.vm_name
   admin_username                  = var.username
-  admin_password                  = var.passwd
+  admin_password                  = var.vm_password
   disable_password_authentication = false
   source_image_reference {
     publisher = var.publisher
@@ -131,7 +131,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     connection {
       type     = var.allowssh
       user     = var.username
-      password = var.passwd
+      password = var.vm_password
       host     = azurerm_public_ip.pip.ip_address
     }
   }

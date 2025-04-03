@@ -168,7 +168,7 @@ variable "username" {
   sensitive   = true
 }
 
-variable "passwd" {
+variable "vm_password" {
   type        = string
   description = "passwd"
   sensitive   = true
