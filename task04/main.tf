@@ -60,7 +60,7 @@ resource "azurerm_network_security_rule" "allow_ssh" {
   destination_port_range      = "22"
   network_security_group_name = var.nsg_name
   resource_group_name         = var.resource_group_name
-  
+
 }
 
 resource "azurerm_network_security_rule" "allow_http" {
@@ -101,10 +101,10 @@ resource "azurerm_network_interface_security_group_association" "nsg_nic_associa
 }
 
 resource "azurerm_linux_virtual_machine" "linux_vm" {
-  resource_group_name             = var.resource_group_name
-  location                        = var.location
-  network_interface_ids           = [azurerm_network_interface.nic.id]
-  size                            = "Standard_B2s"
+  resource_group_name   = var.resource_group_name
+  location              = var.location
+  network_interface_ids = [azurerm_network_interface.nic.id]
+  size                  = "Standard_B2s"
   tags = {
     Creator = "gowtham_rayadurgam@epam.com"
   }
