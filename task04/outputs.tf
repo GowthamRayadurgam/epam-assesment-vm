@@ -1,4 +1,4 @@
-output "vm_public_ipvm_fqdn" {
+output "vm_fqdn" {
   value       = azurerm_public_ip.pip.fqdn
   description = "fqdn"
 }
