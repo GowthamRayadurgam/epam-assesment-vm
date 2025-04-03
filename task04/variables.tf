@@ -29,3 +29,10 @@ variable "dns_lable" {
 variable "nsg_name" {
   
 }
+variable "nicname" {
+  
+}
+
+variable "vm_name" {
+  
+}
